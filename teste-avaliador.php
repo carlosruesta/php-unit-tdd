@@ -17,11 +17,11 @@ $leilao->recebeLance(new Lance($joao, 2000));
 $leilao->recebeLance(new Lance($maria, 2500));
 
 // executa o teste - Act - When
-$leiloero = new Avaliador();
-$leiloero->avalia($leilao);
+$leiloero1 = new Avaliador();
+$leiloero1->avalia($leilao);
 
 // verifica o resultado esperado - Assert - Then
-$maiorValor = $leiloero->getMaiorValor();
+$maiorValor = $leiloero1->getMaiorValor();
 // Assert - Then
 $valorEsperado = 2500;
 
@@ -30,3 +30,20 @@ if ($valorEsperado == $maiorValor) {
 } else {
     echo "TESTE FALHOU";
 }
+
+$maria = new Usuario('Maria');
+$joao = new Usuario('João');
+$leilao = new Leilao('Sentra');
+$leilao->recebeLance(new Lance($joao, 2000));
+$leilao->recebeLance(new Lance($joao, 1000));
+$leilao->recebeLance(new Lance($joao, 2300));
+$leilao->recebeLance(new Lance($maria, 2700));
+$leilao->recebeLance(new Lance($joao, 2100));
+$leilao->recebeLance(new Lance($maria, 1500));
+$leilao->recebeLance(new Lance($joao, 3000));
+
+//var_dump($leilao->getLances());
+$leiloero2 = new Avaliador();
+$leiloero2->avalia($leilao);
+var_dump($leiloero2->getMaioresLances());
+var_dump($leilao->getLances());
