@@ -10,20 +10,26 @@ use PHPUnit\Framework\TestCase;
 
 class AvaliadorTest extends TestCase
 {
+
+    private Avaliador $leiloero;
+
+    public function setUp(): void
+    {
+        $this->leiloero = new Avaliador();
+    }
+
     /**
      * @dataProvider obtemLeiloes
      */
     public function testAvaliadorDeveEncontrarOMaiorValorDeLances(Leilao  $leilao)
     {
 
-        $leiloeiro = new Avaliador();
-
         // Act - When / Executamos o código a ser testado
-        $leiloeiro->avalia($leilao);
+        $this->leiloero->avalia($leilao);
 
         // Assert - Then / Verificamos se a saída é a esperada
 
-        self::assertEquals(2500, $leiloeiro->getMaiorValor());
+        self::assertEquals(2500, $this->leiloero->getMaiorValor());
 
     }
 
@@ -32,14 +38,12 @@ class AvaliadorTest extends TestCase
      */
     public function testAvaliadorDeveEncontrarOMenorValorDeLances(Leilao  $leilao)
     {
-        $leiloeiro = new Avaliador();
-
         // Act - When / Executamos o código a ser testado
-        $leiloeiro->avalia($leilao);
+        $this->leiloero->avalia($leilao);
 
         // Assert - Then / Verificamos se a saída é a esperada
 
-        self::assertEquals(1000, $leiloeiro->getMenorValor());
+        self::assertEquals(1000, $this->leiloero->getMenorValor());
 
     }
 
@@ -49,17 +53,20 @@ class AvaliadorTest extends TestCase
      */
     public function testAvaliadorDeveRetornarOsTresMaioresValores(Leilao $leilao)
     {
-        $avaliador = new Avaliador();
+        $this->leiloero->avalia($leilao);
 
-        $avaliador->avalia($leilao);
-
-        $maiores = $avaliador->getMaioresLances();
+        $maiores = $this->leiloero->getMaioresLances();
         self::assertCount(3, $maiores);
         self::assertEquals(2500, $maiores[0]->getValor());
         self::assertEquals(2000, $maiores[1]->getValor());
         self::assertEquals(1500, $maiores[2]->getValor());
 
     }
+
+    /**
+     *  Arrange - Given / Preparamos os cenários do testes
+     *  Dados para os testes
+     */
 
     public function obtemLeiloes()
     {
@@ -96,7 +103,6 @@ class AvaliadorTest extends TestCase
      */
     public function leilaoEmOrdemDecrescente(): array
     {
-        // Arrange - Given / Preparamos o cenário do teste
         $leilao = new Leilao('Fiat 147 0km');
 
         $maria = new Usuario('Maria');
