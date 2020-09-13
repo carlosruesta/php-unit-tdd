@@ -19,7 +19,9 @@ class AvaliadorTest extends TestCase
     }
 
     /**
-     * @dataProvider obtemLeiloes
+     * @dataProvider leilaoEmOrdemCrescente
+     * @dataProvider leilaoEmOrdemDecrescente
+     * @dataProvider leilaoEmOrdemAleatoria
      */
     public function testAvaliadorDeveEncontrarOMaiorValorDeLances(Leilao  $leilao)
     {
@@ -34,7 +36,9 @@ class AvaliadorTest extends TestCase
     }
 
     /**
-     * @dataProvider obtemLeiloes
+     * @dataProvider leilaoEmOrdemCrescente
+     * @dataProvider leilaoEmOrdemDecrescente
+     * @dataProvider leilaoEmOrdemAleatoria
      */
     public function testAvaliadorDeveEncontrarOMenorValorDeLances(Leilao  $leilao)
     {
@@ -48,6 +52,7 @@ class AvaliadorTest extends TestCase
     }
 
     /**
+     * @dataProvider leilaoEmOrdemCrescente
      * @dataProvider leilaoEmOrdemDecrescente
      * @dataProvider leilaoEmOrdemAleatoria
      */
@@ -71,14 +76,14 @@ class AvaliadorTest extends TestCase
     public function obtemLeiloes()
     {
         return [
-            $this->leilaoEmOrdemCrescente()[0],
-            $this->leilaoEmOrdemDecrescente()[0],
-            $this->leilaoEmOrdemAleatoria()[0]
+            $this->leilaoEmOrdemCrescente()['lances-ordem-crescente'],
+            $this->leilaoEmOrdemDecrescente()['lances-ordem-decrescente'],
+            $this->leilaoEmOrdemAleatoria()['lances-ordem-aleatoria']
         ];
     }
 
     /**
-     * @return Leilao[]
+     * @return array
      */
     public function leilaoEmOrdemCrescente(): array
     {
@@ -95,11 +100,11 @@ class AvaliadorTest extends TestCase
         $leilao->recebeLance(new Lance($joao, 2000));
         $leilao->recebeLance(new Lance($luiz, 2500));
 
-        return [[$leilao]];
+        return ['lances-ordem-crescente' => [$leilao]];
     }
 
     /**
-     * @return Leilao[]
+     * @return array
      */
     public function leilaoEmOrdemDecrescente(): array
     {
@@ -115,11 +120,11 @@ class AvaliadorTest extends TestCase
         $leilao->recebeLance(new Lance($maria, 1500));
         $leilao->recebeLance(new Lance($jose, 1000));
 
-        return [[$leilao]];
+        return ['lances-ordem-decrescente' => [$leilao]];
     }
 
     /**
-     * @return Leilao[]
+     * @return array
      */
     public function leilaoEmOrdemAleatoria(): array
     {
@@ -135,6 +140,6 @@ class AvaliadorTest extends TestCase
         $leilao->recebeLance(new Lance($jose, 1000));
         $leilao->recebeLance(new Lance($maria, 2000));
 
-        return [[$leilao]];
+        return ['lances-ordem-aleatoria' => [$leilao]];
     }
 }
