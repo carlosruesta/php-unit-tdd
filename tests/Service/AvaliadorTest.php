@@ -11,11 +11,11 @@ use PHPUnit\Framework\TestCase;
 class AvaliadorTest extends TestCase
 {
 
-    private Avaliador $leiloero;
+    private Avaliador $leiloeiro;
 
     public function setUp(): void
     {
-        $this->leiloero = new Avaliador();
+        $this->leiloeiro = new Avaliador();
     }
 
     /**
@@ -27,11 +27,11 @@ class AvaliadorTest extends TestCase
     {
 
         // Act - When / Executamos o código a ser testado
-        $this->leiloero->avalia($leilao);
+        $this->leiloeiro->avalia($leilao);
 
         // Assert - Then / Verificamos se a saída é a esperada
 
-        self::assertEquals(2500, $this->leiloero->getMaiorValor());
+        self::assertEquals(2500, $this->leiloeiro->getMaiorValor());
 
     }
 
@@ -43,11 +43,11 @@ class AvaliadorTest extends TestCase
     public function testAvaliadorDeveEncontrarOMenorValorDeLances(Leilao  $leilao)
     {
         // Act - When / Executamos o código a ser testado
-        $this->leiloero->avalia($leilao);
+        $this->leiloeiro->avalia($leilao);
 
         // Assert - Then / Verificamos se a saída é a esperada
 
-        self::assertEquals(1000, $this->leiloero->getMenorValor());
+        self::assertEquals(1000, $this->leiloeiro->getMenorValor());
 
     }
 
@@ -58,14 +58,50 @@ class AvaliadorTest extends TestCase
      */
     public function testAvaliadorDeveRetornarOsTresMaioresValores(Leilao $leilao)
     {
-        $this->leiloero->avalia($leilao);
+        $this->leiloeiro->avalia($leilao);
 
-        $maiores = $this->leiloero->getMaioresLances();
+        $maiores = $this->leiloeiro->getMaioresLances();
         self::assertCount(3, $maiores);
         self::assertEquals(2500, $maiores[0]->getValor());
         self::assertEquals(2000, $maiores[1]->getValor());
         self::assertEquals(1500, $maiores[2]->getValor());
 
+    }
+
+    public function testLeilaoVazioNaoPodeSerAvaliadoForma1()
+    {
+        try {
+            $leilao = new Leilao('Fusca Azul');
+            $this->leiloeiro->avalia($leilao);
+
+            static::fail('Exceção deveria ter sido lançada');
+        } catch (\DomainException $exception) {
+            static::assertEquals(
+                'Não é possível avaliar leilão vazio',
+                $exception->getMessage());
+        }
+    }
+
+    public function testLeilaoVazioNaoPodeSerAvaliadoForma2()
+    {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('Não é possível avaliar leilão vazio');
+
+        $leilao = new Leilao("Fusca Azul");
+        $this->leiloeiro->avalia($leilao);
+    }
+
+    public function testLeilaoFinalizadoNaoPodeSerAvaliado()
+    {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('Leilão já finalizado');
+
+        $leilao = new Leilao('Fiat 147 0KM');
+        $leilao->recebeLance(new Lance(new Usuario('Teste'), 2000));
+        $leilao->finaliza();
+
+        $this->leiloeiro->avalia($leilao);
+        
     }
 
     /**
